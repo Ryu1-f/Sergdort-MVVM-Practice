@@ -1,0 +1,17 @@
+name: Sergdort-MVVM-Practice
+
+options:
+  bundleIdPrefix: jp.co.ryu1fukami
+
+targets:
+  Sergdort-MVVM-Practice:
+    type: application
+    platform: iOS
+    sources: Sergdort-MVVM-Practice
+    setting:
+      base:
+        INFOPLIST_FILE: Sergdort-MVVM-Practice-Practice/Resources/Info.plist
+    dependencies:
+      - carthage: RxSwift
+      - carthage: RxCocoa
+      - carthage: APIKit

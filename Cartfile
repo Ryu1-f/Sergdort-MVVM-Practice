@@ -1,0 +1,5 @@
+## Reactive
+github "ReactiveX/RxSwift" ~> 5.0
+
+## APIKit
+github "ishkawa/APIKit" ~> 5.0
