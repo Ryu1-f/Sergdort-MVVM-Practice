@@ -2,7 +2,7 @@
 //  WikipediaPage.swift
 //  Sergdort-MVVM-Practice
 //
-//  Created by 深見龍一 on 2020/03/19.
+//  Created by 深見龍一 on 2020/03/21.
 //
 
 import Foundation

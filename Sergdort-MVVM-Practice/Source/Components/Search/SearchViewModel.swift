@@ -10,17 +10,16 @@ import RxCocoa
 
 class SearchViewModel {
     struct Dependency {
-        var wikipediaAPI: WikipediaAPI
+        var wikipediaAPI: WikipediaSearchProtocol
         var scheduler: SchedulerType
 
         public static var `default`: Dependency {
             Dependency(
-                wikipediaAPI: WikipediaDefaultAPI(URLSession: .shared),
+                wikipediaAPI: WikipediaSearch(urlSession: .shared),
                 scheduler: ConcurrentMainScheduler.instance
             )
         }
     }
-    
 
     private let dependency: Dependency
     private let disposeBag = DisposeBag()
@@ -36,54 +35,58 @@ extension SearchViewModel {
     }
 
     struct Output {
-      let wikipediaPages: Observable<[WikipediaPage]>
-      let searchDescription: Observable<String>
-      let error: Observable<Error>
+        let wikipediaPages: Observable<[WikipediaPage]>
+        let searchDescription: Observable<String>
+        let error: Observable<Error>
+        let isLoading: Observable<Bool>
     }
 
     func transform(input: Input) -> Output {
+        let _wikipediaPages = PublishSubject<[WikipediaPage]>()
+        let _searchDescription = PublishSubject<String>()
+        let _error = PublishSubject<Error>()
+        let _isLoading = PublishSubject<Bool>()
+
         let filterdText = input.searchText
             .debounce(.milliseconds(300), scheduler: dependency.scheduler)
             .share(replay: 1)
 
         let sequence = filterdText
-            .flatMapLatest { [weak self] text -> Observable<Event<[WikipediaPage]>> in
-                return (self?.dependency.wikipediaAPI
-                    .search(from: text)
-                    .materialize())!
+            .do(onNext: { _ in
+                _isLoading.onNext(true)
+            })
+            .flatMap { [weak self] text -> Observable<Event<[WikipediaPage]>> in
+                if text == "" { return Observable.from([]).materialize() }
+                return (self?.dependency.wikipediaAPI.search(from: text))!
+                    .asObservable()
+                    .materialize()
             }
+            .do(onNext: { _ in
+                _isLoading.onNext(false)
+            })
             .share(replay: 1)
 
-        let wikipediaPages = sequence.elements()
+        sequence
+            .errors()
+            .bind(to: _error)
+            .disposed(by: disposeBag)
 
-        let _searchDescription = PublishRelay<String>()
+        sequence
+            .elements()
+            .bind(to: _wikipediaPages)
+            .disposed(by: disposeBag)
 
-        wikipediaPages
+        _wikipediaPages
             .withLatestFrom(filterdText) { (pages, word) -> String in
-                print(pages)
-              return "\(word) \(pages.count)件"
+                "\(word) \(pages.count)件"
             }
             .bind(to: _searchDescription)
             .disposed(by: disposeBag)
 
-        return Output(wikipediaPages: wikipediaPages,
-                    searchDescription: _searchDescription.asObservable(),
-                    error: sequence.errors())
-    }
-}
-
-import Foundation
-import RxSwift
-
-extension RxSwift.ObservableType where Element: RxSwift.EventConvertible {
-
-    public func elements() -> RxSwift.Observable<Element.Element> {
-        return filter { $0.event.element != nil }
-            .map { $0.event.element! }
-    }
-
-    public func errors() -> RxSwift.Observable<Swift.Error> {
-        return filter { $0.event.error != nil }
-            .map { $0.event.error! }
+        return Output(wikipediaPages: _wikipediaPages,
+                    searchDescription: _searchDescription,
+                    error: _error,
+                    isLoading: _isLoading
+        )
     }
 }

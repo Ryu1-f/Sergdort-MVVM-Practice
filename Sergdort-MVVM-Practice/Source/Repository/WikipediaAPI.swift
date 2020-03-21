@@ -7,23 +7,23 @@
 
 import RxSwift
 import RxCocoa
+import Foundation
 
-public protocol WikipediaAPI {
-    func search(from word: String) -> Observable<[WikipediaPage]>
+public protocol WikipediaSearchProtocol {
+    func search(from word: String) -> Single<[WikipediaPage]>
 }
 
-public class WikipediaDefaultAPI : WikipediaAPI {
-
+public class WikipediaSearch : WikipediaSearchProtocol {
     private let host = URL(string: "https://ja.wikipedia.org")!
     private let path = "/w/api.php"
-    private let URLSession: Foundation.URLSession
+    private let urlSession: URLSession
+    private let decoder: JSONDecoder = JSONDecoder()
 
-    public init(URLSession: Foundation.URLSession) {
-        self.URLSession = URLSession
+    public init(urlSession: URLSession) {
+        self.urlSession = urlSession
     }
 
-    public func search(from word: String) -> Observable<[WikipediaPage]> {
-
+    public func search(from word: String) -> Single<[WikipediaPage]> {
         var components = URLComponents(url: host, resolvingAgainstBaseURL: false)!
         components.path = path
 
@@ -36,17 +36,20 @@ public class WikipediaDefaultAPI : WikipediaAPI {
 
         components.queryItems = items
 
-        let request = URLRequest(url: components.url!)
-        return URLSession.rx.response(request: request)
-            .map { pair in
+        return Single<[WikipediaPage]>.create { [weak self] single in
+            let task = self?.urlSession.dataTask(with: components.url!) { data, _, error -> Void in
                 do {
-                    let response = try JSONDecoder().decode(WikipediaSearchResponse.self,
-                                                            from: pair.data)
-
-                    return response.query.search
+                    if let data = data,
+                        let result = try self?.decoder.decode(WikipediaSearchResponse.self, from: data) {
+                        single(.success(result.query.search))
+                    }
                 } catch {
-                    throw error
+                    single(.error(error))
                 }
+            }
+            task?.resume()
+
+            return Disposables.create { task?.cancel() }
         }
     }
 }
