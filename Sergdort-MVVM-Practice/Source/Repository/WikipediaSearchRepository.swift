@@ -9,7 +9,7 @@ import RxSwift
 import RxCocoa
 import Foundation
 
-public protocol WikipediaSearchProtocol {
+public protocol WikipediaSearchProtocol: AnyObject {
     func search(from word: String) -> Single<[WikipediaPage]>
 }
 
