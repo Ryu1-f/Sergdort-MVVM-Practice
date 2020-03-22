@@ -13,7 +13,7 @@ public protocol WikipediaSearchProtocol {
     func search(from word: String) -> Single<[WikipediaPage]>
 }
 
-public class WikipediaSearch : WikipediaSearchProtocol {
+public class WikipediaSearchRepository : WikipediaSearchProtocol {
     private let host = URL(string: "https://ja.wikipedia.org")!
     private let path = "/w/api.php"
     private let urlSession: URLSession

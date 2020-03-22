@@ -15,7 +15,7 @@ class SearchViewModel {
 
         public static var `default`: Dependency {
             Dependency(
-                wikipediaAPI: WikipediaSearch(urlSession: .shared),
+                wikipediaAPI: WikipediaSearchRepository(urlSession: .shared),
                 scheduler: ConcurrentMainScheduler.instance
             )
         }
