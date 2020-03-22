@@ -2,12 +2,10 @@
 //  Sergdort_MVVM_PracticeTests.swift
 //  Sergdort-MVVM-PracticeTests
 //
-//  Created by 深見龍一 on 2020/03/17.
-//  Copyright © 2020 深見龍一. All rights reserved.
+//  Created by 深見龍一 on 2020/03/22.
 //
 
 import XCTest
-@testable import Sergdort_MVVM_Practice
 
 class Sergdort_MVVM_PracticeTests: XCTestCase {
 
@@ -26,7 +24,7 @@ class Sergdort_MVVM_PracticeTests: XCTestCase {
 
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measure {
+        measure {
             // Put the code you want to measure the time of here.
         }
     }

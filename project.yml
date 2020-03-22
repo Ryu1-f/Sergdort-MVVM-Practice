@@ -16,3 +16,19 @@ targets:
       - carthage: RxCocoa
       - carthage: RxRelay
       - carthage: APIKit
+
+  Sergdort-MVVM-PracticeTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: Sergdort-MVVM-PracticeTests
+    setting:
+      base:
+        INFOPLIST_FILE: Sergdort-MVVM-Practice-PracticeTests/Info.plist
+    dependencies:
+      - target: Sergdort-MVVM-Practice
+      - carthage: RxSwift
+      - carthage: RxCocoa
+      - carthage: RxRelay
+      - carthage: APIKit
+      - carthage: Quick
+      - carthage: Nimble

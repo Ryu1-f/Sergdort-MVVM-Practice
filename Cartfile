@@ -3,3 +3,7 @@ github "ReactiveX/RxSwift" ~> 5.0
 
 ## APIKit
 github "ishkawa/APIKit" ~> 5.0
+
+## Test
+github "Quick/Quick"
+github "Quick/Nimble"
