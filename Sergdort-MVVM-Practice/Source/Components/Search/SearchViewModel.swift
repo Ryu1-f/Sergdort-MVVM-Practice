@@ -42,10 +42,10 @@ extension SearchViewModel {
     }
 
     func transform(input: Input) -> Output {
-        let _wikipediaPages = PublishSubject<[WikipediaPage]>()
-        let _searchDescription = PublishSubject<String>()
-        let _error = PublishSubject<Error>()
-        let _isLoading = PublishSubject<Bool>()
+        let _wikipediaPages = PublishRelay<[WikipediaPage]>()
+        let _searchDescription = PublishRelay<String>()
+        let _error = PublishRelay<Error>()
+        let _isLoading = PublishRelay<Bool>()
 
         let filterdText = input.searchText
             .debounce(.milliseconds(300), scheduler: dependency.scheduler)
@@ -53,7 +53,7 @@ extension SearchViewModel {
 
         let sequence = filterdText
             .do(onNext: { _ in
-                _isLoading.onNext(true)
+                _isLoading.accept(true)
             })
             .flatMap { [weak self] text -> Observable<Event<[WikipediaPage]>> in
                 if text == "" { return Observable.from([]).materialize() }
@@ -62,7 +62,7 @@ extension SearchViewModel {
                     .materialize()
             }
             .do(onNext: { _ in
-                _isLoading.onNext(false)
+                _isLoading.accept(false)
             })
             .share(replay: 1)
 
@@ -83,10 +83,10 @@ extension SearchViewModel {
             .bind(to: _searchDescription)
             .disposed(by: disposeBag)
 
-        return Output(wikipediaPages: _wikipediaPages,
-                    searchDescription: _searchDescription,
-                    error: _error,
-                    isLoading: _isLoading
+        return Output(wikipediaPages: _wikipediaPages.asObservable(),
+                      searchDescription: _searchDescription.asObservable(),
+                      error: _error.asObservable(),
+                      isLoading: _isLoading.asObservable()
         )
     }
 }
