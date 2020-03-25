@@ -29,6 +29,8 @@ targets:
       - carthage: RxSwift
       - carthage: RxCocoa
       - carthage: RxRelay
+      - carthage: RxTest
+      - carthage: RxBlocking
       - carthage: APIKit
       - carthage: Quick
       - carthage: Nimble
