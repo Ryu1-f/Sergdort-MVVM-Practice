@@ -19,13 +19,13 @@ class SearchViewModelSpec: QuickSpec {
 
     override func spec() {
         var wikipediaSearchRepositoryStub: WikipediaSearchRepositoryStub!
+        var scheduler: TestScheduler!
         var viewModel: SearchViewModel!
         var input: SearchViewModel.Input!
         var output: SearchViewModel.Output!
 
         describe("call API") {
             context("when result successed") {
-                var scheduler: TestScheduler!
 
                 var inputTextObservable: Array<Recorded<Event<String>>>!
                 var searchText: TestableObservable<String>!
@@ -92,6 +92,7 @@ class SearchViewModelSpec: QuickSpec {
                         ]))
                     }
                 }
+
                 context("when debounce time not passed") {
                     beforeEach {
                         inputTextObservable = [
@@ -125,33 +126,61 @@ class SearchViewModelSpec: QuickSpec {
                         expect(resultDescriptionObserver.events).to(equal([]))
                     }
                 }
-            }
-            context("when result failed") {
-                var error: Error!
 
-                beforeEach {
-                    enum TestError: Error {
-                        case testError
+                context("when search text is empty") {
+                    beforeEach {
+                        input = .init(searchText: Observable.just(""))
+                        output = viewModel.transform(input: input)
+
+                        output.wikipediaPages
+                            .bind(to: pagesObserver)
+                            .disposed(by: self.disposeBag)
                     }
 
+                    it("get mock data at 10 sec") {
+                        expect(pagesObserver.events).to(equal([]))
+                    }
+                }
+            }
+
+            context("when result failed") {
+                var error: Error!
+                scheduler = TestScheduler(initialClock: 0, resolution: 0.1)
+                enum TestError: Error {
+                    case testError
+                }
+                var errorObserver: TestableObserver<TestError>! = scheduler!.createObserver(TestError.self)
+
+                beforeEach {
                     let errorResult: Single<[WikipediaPage]> = Observable<[WikipediaPage]>.error(TestError.testError).asSingle()
                     wikipediaSearchRepositoryStub = .init(search: errorResult)
 
                     viewModel = .init(
                         dependency: .init(
                             wikipediaAPI: wikipediaSearchRepositoryStub,
-                            scheduler: ConcurrentMainScheduler.instance
+                            scheduler: scheduler
                         )
                     )
 
-                    input = .init(searchText: Observable.just(""))
+                    input = .init(searchText: Observable.just("error"))
                     output = viewModel.transform(input: input)
 
+                    output.error
+                        .subscribe(onNext: { error in
+                            switch error {
+                            case let error as TestError:
+                                errorObserver.onNext(error)
+                            default:
+                                print(error)
+                            }
+                        })
+                        .disposed(by: self.disposeBag)
 
+                    scheduler.start()
                 }
 
                 it("") {
-//                    expect(error as? TestError).to(equal(TestError.testError))
+//                    expect(errorObserver.events).to(equal([]))
                 }
             }
         }
