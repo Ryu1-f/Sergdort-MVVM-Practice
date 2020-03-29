@@ -149,7 +149,6 @@ class SearchViewModelSpec: QuickSpec {
                 enum TestError: Error {
                     case testError
                 }
-                var errorObserver: TestableObserver<TestError>! = scheduler!.createObserver(TestError.self)
 
                 beforeEach {
                     let errorResult: Single<[WikipediaPage]> = Observable<[WikipediaPage]>.error(TestError.testError).asSingle()
@@ -165,22 +164,11 @@ class SearchViewModelSpec: QuickSpec {
                     input = .init(searchText: Observable.just("error"))
                     output = viewModel.transform(input: input)
 
-                    output.error
-                        .subscribe(onNext: { error in
-                            switch error {
-                            case let error as TestError:
-                                errorObserver.onNext(error)
-                            default:
-                                print(error)
-                            }
-                        })
-                        .disposed(by: self.disposeBag)
-
-                    scheduler.start()
+                    error = try! output.error.toBlocking().first()!
                 }
 
-                it("") {
-//                    expect(errorObserver.events).to(equal([]))
+                it("can get correct error") {
+                    expect(error as? TestError).to(equal(TestError.testError))
                 }
             }
         }
