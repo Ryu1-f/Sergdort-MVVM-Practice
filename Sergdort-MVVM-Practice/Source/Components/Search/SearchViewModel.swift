@@ -44,7 +44,6 @@ extension SearchViewModel {
     func transform(input: Input) -> Output {
         let _wikipediaPages = PublishRelay<[WikipediaPage]>()
         let _searchDescription = PublishRelay<String>()
-//        let _error = PublishRelay<Error>()
         let _isLoading = PublishRelay<Bool>()
 
         let filterdText = input.searchText
@@ -65,11 +64,6 @@ extension SearchViewModel {
                 _isLoading.accept(false)
             })
             .share(replay: 1)
-
-//        sequence
-//            .errors()
-//            .bind(to: _error)
-//            .disposed(by: disposeBag)
 
         sequence
             .elements()
