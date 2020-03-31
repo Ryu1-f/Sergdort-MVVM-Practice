@@ -39,6 +39,10 @@ Pods/
 Carthage/*
 
 
+# Bundler
+vendor/
+
+
 # Various
 
 .DS_Store
