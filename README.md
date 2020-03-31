@@ -1,15 +1,20 @@
 # Sergdort-MVVM-Practice
 
 ## Setup
+### make project file
 ```terminal
-$ carthage update --platform iOS --no-use-binaries
 $ xcodegen
 ```
 
-### install new library by Carthage
+### install libraries by Carthage
+```terminal
+$ carthage update --platform iOS --no-use-binaries
+```
+
+### install new library by Carthage(if necessary)
 ```terminal
 $ carthage update <library name> --platform iOS --no-use-binaries
-```　
+```
 
 ### Gemfile
 ```terminal
