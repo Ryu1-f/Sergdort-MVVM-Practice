@@ -13,7 +13,7 @@ public protocol WikipediaSearchProtocol: AnyObject {
     func search(from word: String) -> Single<[WikipediaPage]>
 }
 
-public class WikipediaSearchRepository : WikipediaSearchProtocol {
+public class WikipediaSearchRepository: WikipediaSearchProtocol {
     private let host = URL(string: "https://ja.wikipedia.org")!
     private let path = "/w/api.php"
     private let urlSession: URLSession
@@ -43,7 +43,8 @@ public class WikipediaSearchRepository : WikipediaSearchProtocol {
                         let result = try self?.decoder.decode(WikipediaSearchResponse.self, from: data) {
                         single(.success(result.query.search))
                     }
-                } catch {
+                }
+                catch {
                     single(.error(error))
                 }
             }

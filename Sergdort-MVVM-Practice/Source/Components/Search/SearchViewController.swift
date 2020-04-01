@@ -22,32 +22,32 @@ class SearchViewController: UIViewController {
         setupViews()
 
         let input = SearchViewModel.Input(
-          searchText: searchBar.rx.text.orEmpty.asObservable()
+            searchText: searchBar.rx.text.orEmpty.asObservable()
         )
 
         let output = viewModel.transform(input: input)
 
-//        output.searchDescription
-//          .bind(to: navigationItem.rx.title)
-//          .disposed(by: disposeBag)
+        //        output.searchDescription
+        //          .bind(to: navigationItem.rx.title)
+        //          .disposed(by: disposeBag)
 
         output.wikipediaPages
-            .bind(to: tableView.rx.items){tableView, row, element in
+            .bind(to: tableView.rx.items) {_, _, element in
                 let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "")
                 cell.textLabel?.text = element.title
                 cell.detailTextLabel?.text = element.url.absoluteString
                 return cell
-            }
-            .disposed(by: disposeBag)
+        }
+        .disposed(by: disposeBag)
 
         output.error
-          .subscribe(onNext: { error in
-            if let error = error as? URLError,
-              error.code == URLError.notConnectedToInternet {
-              print(error)
-            }
-          })
-          .disposed(by: disposeBag)
+            .subscribe(onNext: { error in
+                if let error = error as? URLError,
+                    error.code == URLError.notConnectedToInternet {
+                    print(error)
+                }
+            })
+            .disposed(by: disposeBag)
 
         output.isLoading
             .map { !$0 }

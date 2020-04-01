@@ -40,6 +40,6 @@ extension WikipediaPage: Decodable {
 
         self.title = try container.decode(String.self, forKey: .title)
         // 2.
-        self.url =  URL(string: "https://ja.wikipedia.org/w/index.php?curid=\(id)")!
+        self.url = URL(string: "https://ja.wikipedia.org/w/index.php?curid=\(id)")!
     }
 }

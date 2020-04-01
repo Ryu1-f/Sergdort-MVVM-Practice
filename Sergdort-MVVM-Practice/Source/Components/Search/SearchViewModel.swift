@@ -59,10 +59,10 @@ extension SearchViewModel {
                 return (self?.dependency.wikipediaAPI.search(from: text))!
                     .asObservable()
                     .materialize()
-            }
-            .do(onNext: { _ in
-                _isLoading.accept(false)
-            })
+        }
+        .do(onNext: { _ in
+            _isLoading.accept(false)
+        })
             .share(replay: 1)
 
         sequence
@@ -73,9 +73,9 @@ extension SearchViewModel {
         _wikipediaPages
             .withLatestFrom(filterdText) { (pages, word) -> String in
                 "\(word) \(pages.count)件"
-            }
-            .bind(to: _searchDescription)
-            .disposed(by: disposeBag)
+        }
+        .bind(to: _searchDescription)
+        .disposed(by: disposeBag)
 
         return Output(wikipediaPages: _wikipediaPages.asObservable(),
                       searchDescription: _searchDescription.asObservable(),
