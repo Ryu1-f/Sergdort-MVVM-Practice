@@ -1,0 +1,58 @@
+disabled_rules:
+  - type_name             # allow any type name length and ander score `_`.
+  - line_length           # allow any line length
+  - file_length           # allow any file length
+  - identifier_name       # allow `_`-prefixed variable name
+  - weak_delegate         # delegate may be a separated class that needs to be retained by core class.
+  - shorthand_operator
+  - cyclomatic_complexity
+
+excluded:
+  - .swiftlint.yml
+  - vendor
+  - Carthage
+  - Pods
+  - Sergdort-MVVM-PracticeTests/
+
+custom_rules:
+  function_argument_label_spacing:
+    name: "Add white space."
+    regex: '\([^:\[\)]+:[^\s\):]+\)'
+    message: "White space should be next to the colon of function argument label."
+    severity: warning
+    match_kinds:
+      - identifier
+      - keyword
+      - number
+  unowned:
+    name: "Unowned"
+    regex: '(unowned)'
+    message: "Use `weak` instead."
+    severity: warning
+
+  multiple_white_space:
+    name: "Multiple Whitespace"
+    regex: '(=|func)\s{2,}'
+    message: 'Lines should not have multiple whitespace'
+    severrity: warning
+
+statement_position:
+  statement_mode: uncuddled_else
+
+force_cast: warning
+
+function_body_length: 500
+
+type_body_length:
+  warning: 500
+
+function_parameter_count:
+  warning: 7
+  error: 8
+
+nesting:
+  type_level:
+    warning: 3
+
+large_tuple:
+  warning: 6
