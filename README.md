@@ -1,14 +1,14 @@
 # Sergdort-MVVM-Practice
 
 ## Setup
-### make project file
-```terminal
-$ xcodegen
-```
-
 ### install libraries by Carthage
 ```terminal
-$ carthage update --platform iOS --no-use-binaries
+$ make install-carthage
+```
+
+### make project file
+```terminal
+$ make run-xcodegen
 ```
 
 ### install new library by Carthage(if necessary)
@@ -18,12 +18,12 @@ $ carthage update <library name> --platform iOS --no-use-binaries
 
 ### Gemfile
 ```terminal
-$ bundle install --path vendor/bundle
+$ make install-cocoapods
 ```
 
 ### Pod install
 ```terminal
-$ bundle exec pod install
+$ make install-pod
 ```
 
 ### Integrate SwiftLint(installed by brew) into an Xcode scheme
