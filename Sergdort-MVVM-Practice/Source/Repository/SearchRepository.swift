@@ -9,7 +9,11 @@ import Foundation
 import RxSwift
 import APIKit
 
-public final class SearchRepository {
+protocol SearchRepositoryProtocol: AnyObject {
+    func getUsers(name: String) -> Single<Users>
+}
+
+public final class SearchRepository: SearchRepositoryProtocol {
     private let session: Session
 
     init(session: Session = .shared) {

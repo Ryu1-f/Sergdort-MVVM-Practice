@@ -11,7 +11,7 @@ import RxCocoa
 
 class UserSearchViewModel {
     struct Dependency {
-        var searchRepository: SearchRepository
+        var searchRepository: SearchRepositoryProtocol
         var scheduler: SchedulerType
 
         public static var `default`: Dependency {
