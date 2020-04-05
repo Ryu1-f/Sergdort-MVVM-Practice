@@ -15,7 +15,7 @@ extension SearchService {
         public let parameters: Any?
 
         public var baseURL: URL {
-            URL(string: "https://api.github.com")!
+            Endpoint.github
         }
 
         public var method: HTTPMethod {
