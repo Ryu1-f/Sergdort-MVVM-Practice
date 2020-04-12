@@ -21,8 +21,9 @@ class UserSearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
         title = "Github Search"
+        setupViews()
+        bind()
 
         let input = UserSearchViewModel.Input(
             searchText: searchBar.rx.text.orEmpty.asObservable()
@@ -70,5 +71,14 @@ class UserSearchViewController: UIViewController {
         activityIndicator.center = view.center
         activityIndicator.startAnimating()
         view.addSubview(activityIndicator)
+    }
+
+    private func bind() {
+        tableView.rx.itemSelected
+            .subscribe({ [weak self] indexPath in
+                guard let indexPath = indexPath.element else { return }
+                self?.tableView.deselectRow(at: indexPath, animated: false)
+            })
+            .disposed(by: disposeBag)
     }
 }

@@ -19,8 +19,9 @@ class SearchViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
         title = "Wikipedia Search"
+        setupViews()
+        bind()
 
         let input = SearchViewModel.Input(
             searchText: searchBar.rx.text.orEmpty.asObservable()
@@ -68,5 +69,14 @@ class SearchViewController: UIViewController {
         activityIndicator.center = view.center
         activityIndicator.startAnimating()
         view.addSubview(activityIndicator)
+    }
+
+    private func bind() {
+        tableView.rx.itemSelected
+            .subscribe({ [weak self] indexPath in
+                guard let indexPath = indexPath.element else { return }
+                self?.tableView.deselectRow(at: indexPath, animated: false)
+            })
+            .disposed(by: disposeBag)
     }
 }
