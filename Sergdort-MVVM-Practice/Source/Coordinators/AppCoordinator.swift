@@ -6,18 +6,23 @@
 //
 import UIKit
 
-final class AppCoordinators {
+final class AppCoordinator {
     private let window: UIWindow
-    private let rootCoordinator: Coordinator
+    private let rootViewController: UITabBarController
+    private var userSearchCoordinator: UserSearchCoordinator
 
-    init(window: UIWindow, rootCoordinator: Coordinator) {
+    init(window: UIWindow) {
         self.window = window
-        self.rootCoordinator = rootCoordinator
+        self.rootViewController = .init()
+
+        let userSearchNavigationController: UINavigationController = .init()
+        self.userSearchCoordinator = .init(presenter: userSearchNavigationController)
+        rootViewController.viewControllers = [userSearchNavigationController]
     }
 
     func start() {
-        rootCoordinator.start()
-        window.rootViewController = rootCoordinator.presenter
+        window.rootViewController = rootViewController
+        userSearchCoordinator.start()
         window.makeKeyAndVisible()
     }
 }
