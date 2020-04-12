@@ -22,6 +22,7 @@ class UserSearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        title = "Github Search"
 
         let input = UserSearchViewModel.Input(
             searchText: searchBar.rx.text.orEmpty.asObservable()

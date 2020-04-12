@@ -1,13 +1,13 @@
 //
-//  UserSearchCoordinator.swift
+//  SearchCoordinator.swift
 //  Sergdort-MVVM-Practice
 //
-//  Created by 深見龍一 on 2020/04/09.
+//  Created by 深見龍一 on 2020/04/12.
 //
 
 import UIKit
 
-final class UserSearchCoordinator: NavigationCoordinator {
+final class SearchCoordinator: NavigationCoordinator {
     let navigationController: UINavigationController
 
     init(presenter: UINavigationController) {
@@ -15,8 +15,8 @@ final class UserSearchCoordinator: NavigationCoordinator {
     }
 
     func start() {
-        let viewController: UserSearchViewController = .init()
+        let viewController: SearchViewController = .init()
         navigationController.viewControllers = [viewController]
-        navigationController.tabBarItem = .init(tabBarSystemItem: .favorites, tag: 0)
+        navigationController.tabBarItem = .init(tabBarSystemItem: .search, tag: 1)
     }
 }

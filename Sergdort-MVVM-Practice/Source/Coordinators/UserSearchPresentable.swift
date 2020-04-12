@@ -5,7 +5,6 @@
 //  Created by 深見龍一 on 2020/04/08.
 //
 
-import Foundation
 import UIKit
 
 protocol DetailsPresentable {

@@ -19,18 +19,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
-        let window: UIWindow = .init(frame: UIScreen.main.bounds)
-        self.window = window
-
-        let appCordinator: AppCoordinator = .init(window: window)
-        appCordinator.start()
-        self.appCoordinator = appCordinator
-
         if let windowScene = scene as? UIWindowScene {
             let window: UIWindow = .init(windowScene: windowScene)
             self.window = window
 
-            let appCordinator: AppCoordinator = .init(window: window)
+            let userSearchCoordinator: UserSearchCoordinator = .init(presenter: .init())
+            let searchCoordinator: SearchCoordinator = .init(presenter: .init())
+
+            let mainTabCoordinator: MainTabCoordinator = .init(presenter: .init(), childCoordinators: [userSearchCoordinator, searchCoordinator])
+
+            let appCordinator: AppCoordinator = .init(window: window, rootViewController: mainTabCoordinator)
             appCordinator.start()
             self.appCoordinator = appCordinator
         }

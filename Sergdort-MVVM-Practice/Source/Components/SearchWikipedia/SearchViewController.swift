@@ -20,6 +20,7 @@ class SearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupViews()
+        title = "Wikipedia Search"
 
         let input = SearchViewModel.Input(
             searchText: searchBar.rx.text.orEmpty.asObservable()

@@ -4,25 +4,21 @@
 //
 //  Created by 深見龍一 on 2020/04/08.
 //
+
 import UIKit
 
 final class AppCoordinator {
     private let window: UIWindow
-    private let rootViewController: UITabBarController
-    private var userSearchCoordinator: UserSearchCoordinator
+    private let rootViewController: Coordinator
 
-    init(window: UIWindow) {
+    init(window: UIWindow, rootViewController: Coordinator) {
         self.window = window
-        self.rootViewController = .init()
-
-        let userSearchNavigationController: UINavigationController = .init()
-        self.userSearchCoordinator = .init(presenter: userSearchNavigationController)
-        rootViewController.viewControllers = [userSearchNavigationController]
+        self.rootViewController = rootViewController
     }
 
     func start() {
-        window.rootViewController = rootViewController
-        userSearchCoordinator.start()
+        rootViewController.start()
+        window.rootViewController = rootViewController.presenter
         window.makeKeyAndVisible()
     }
 }
