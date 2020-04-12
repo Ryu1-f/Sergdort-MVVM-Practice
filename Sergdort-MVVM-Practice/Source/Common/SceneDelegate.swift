@@ -12,18 +12,27 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var appCoordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
-        let searchViewController: UserSearchViewController = UserSearchViewController()
+        let window: UIWindow = .init(frame: UIScreen.main.bounds)
+        self.window = window
+
+        let appCordinator: AppCoordinator = .init(window: window)
+        appCordinator.start()
+        self.appCoordinator = appCordinator
+
         if let windowScene = scene as? UIWindowScene {
-            let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = searchViewController
+            let window: UIWindow = .init(windowScene: windowScene)
             self.window = window
-            window.makeKeyAndVisible()
+
+            let appCordinator: AppCoordinator = .init(window: window)
+            appCordinator.start()
+            self.appCoordinator = appCordinator
         }
     }
 

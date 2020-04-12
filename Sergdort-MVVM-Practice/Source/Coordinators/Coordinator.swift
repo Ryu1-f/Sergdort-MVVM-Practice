@@ -8,6 +8,6 @@
 import UIKit
 
 protocol Coordinator {
-    var presenter: UIViewController { get }
+    //    var presenter: UIViewController { get }
     func start()
 }

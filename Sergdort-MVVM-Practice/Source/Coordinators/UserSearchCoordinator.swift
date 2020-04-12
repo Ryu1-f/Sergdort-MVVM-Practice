@@ -8,8 +8,9 @@
 import Foundation
 import UIKit
 
-final class UserSearchCoordinator: NavigationCoordinator, DetailsPresentable {
-    var navigationController: UINavigationController
+final class UserSearchCoordinator: Coordinator {
+    private let navigationController: UINavigationController
+    //    private var userSearchViewController: UserSearchViewController
 
     init(presenter: UINavigationController) {
         self.navigationController = presenter
