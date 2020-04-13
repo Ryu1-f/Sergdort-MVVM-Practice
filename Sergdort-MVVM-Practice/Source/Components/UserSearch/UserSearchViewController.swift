@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class UserSearchViewController: UIViewController {
+final class UserSearchViewController: UIViewController {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
@@ -28,7 +28,8 @@ class UserSearchViewController: UIViewController {
         bind()
 
         let input = UserSearchViewModel.Input(
-            searchText: searchBar.rx.text.orEmpty.asObservable()
+            searchText: searchBar.rx.text.orEmpty.asObservable(),
+            itemSelected: tableView.rx.itemSelected.asObservable()
         )
 
         let output = viewModel.transform(input: input)

@@ -33,6 +33,7 @@ class UserSearchViewModel {
 extension UserSearchViewModel {
     struct Input {
         let searchText: Observable<String>
+        let itemSelected: Observable<IndexPath>
     }
 
     struct Output {
@@ -40,13 +41,15 @@ extension UserSearchViewModel {
         let usersItem: Observable<[Users.Item]>
         let error: Observable<Error>
         let isLoading: Observable<Bool>
+        let selectedItem: Observable<Users.Item>
     }
 
     func transform(input: Input) -> Output {
         let _users = PublishRelay<Users>()
-        let _usersItem = PublishRelay<[Users.Item]>()
+        let _usersItem = BehaviorRelay<[Users.Item]>(value: [])
         let _searchDescription = PublishRelay<String>()
         let _isLoading = PublishRelay<Bool>()
+        let _selectedItem = PublishRelay<Users.Item>()
 
         let filterdText = input.searchText
             .debounce(.milliseconds(300), scheduler: dependency.scheduler)
@@ -85,10 +88,16 @@ extension UserSearchViewModel {
             .bind(to: _usersItem)
             .disposed(by: disposeBag)
 
+        input.itemSelected
+            .map { _usersItem.value[$0.row] }
+            .bind(to: _selectedItem)
+            .disposed(by: disposeBag)
+
         return Output(searchDescription: _searchDescription.asObservable(),
                       usersItem: _usersItem.asObservable(),
                       error: sequence.errors(),
-                      isLoading: _isLoading.asObservable()
+                      isLoading: _isLoading.asObservable(),
+                      selectedItem: _selectedItem.asObservable()
         )
     }
 }
