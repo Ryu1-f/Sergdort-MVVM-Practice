@@ -19,6 +19,8 @@ class UserSearchViewController: UIViewController {
     private let disposeBag = DisposeBag()
     private let viewModel = UserSearchViewModel()
 
+    weak var delegate: UserSearchViewControllerDelegate?
+
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Github Search"
@@ -57,6 +59,13 @@ class UserSearchViewController: UIViewController {
             .map { !$0 }
             .bind(to: activityIndicator.rx.isHidden)
             .disposed(by: disposeBag)
+
+        output.selectedItem
+            .map { $0.login }
+            .subscribe { [weak self] name in
+                self?.delegate?.pushUserDetail(with: name.element ?? "Unknown")
+        }
+        .disposed(by: disposeBag)
     }
 
     public init() {
@@ -81,4 +90,8 @@ class UserSearchViewController: UIViewController {
             })
             .disposed(by: disposeBag)
     }
+}
+
+protocol UserSearchViewControllerDelegate: AnyObject {
+    func pushUserDetail(with title: String)
 }

@@ -16,7 +16,15 @@ final class UserSearchCoordinator: NavigationCoordinator {
 
     func start() {
         let viewController: UserSearchViewController = .init()
+        viewController.delegate = self
         navigationController.viewControllers = [viewController]
         navigationController.tabBarItem = .init(tabBarSystemItem: .favorites, tag: 0)
+    }
+}
+
+extension UserSearchCoordinator: UserSearchViewControllerDelegate {
+    func pushUserDetail(with title: String) {
+        let userDetailCoordinator: UserDetailCoordinator = .init(presenter: navigationController, title: title)
+        userDetailCoordinator.start()
     }
 }
