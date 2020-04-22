@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let userSearchCoordinator: UserSearchCoordinator = .init(presenter: .init())
             let searchCoordinator: SearchCoordinator = .init(presenter: .init())
 
-            let mainTabCoordinator: MainTabCoordinator = .init(presenter: .init(), childCoordinators: [userSearchCoordinator, searchCoordinator])
+            let mainTabCoordinator: MainTabCoordinator = .init(childCoordinators: [userSearchCoordinator, searchCoordinator])
 
             let appCordinator: AppCoordinator = .init(window: window, rootViewController: mainTabCoordinator)
             appCordinator.start()

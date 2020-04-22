@@ -11,7 +11,7 @@ final class MainTabCoordinator: TabBarCoordinator {
     let tabBarController: UITabBarController
     private let childCoordinators: [Coordinator]
 
-    init(presenter: UITabBarController, childCoordinators: [Coordinator]) {
+    init(presenter: UITabBarController = TabBarViewController(), childCoordinators: [Coordinator]) {
         self.tabBarController = presenter
         self.childCoordinators = childCoordinators
     }
