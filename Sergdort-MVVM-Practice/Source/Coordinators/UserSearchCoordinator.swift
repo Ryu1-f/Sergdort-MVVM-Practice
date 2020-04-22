@@ -10,7 +10,7 @@ import UIKit
 final class UserSearchCoordinator: NavigationCoordinator {
     let navigationController: UINavigationController
 
-    init(presenter: UINavigationController) {
+    init(presenter: UINavigationController = NavigationController()) {
         self.navigationController = presenter
     }
 

@@ -23,8 +23,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let window: UIWindow = .init(windowScene: windowScene)
             self.window = window
 
-            let userSearchCoordinator: UserSearchCoordinator = .init(presenter: .init())
-            let searchCoordinator: SearchCoordinator = .init(presenter: .init())
+            let userSearchCoordinator: UserSearchCoordinator = .init()
+            let searchCoordinator: SearchCoordinator = .init()
 
             let mainTabCoordinator: MainTabCoordinator = .init(childCoordinators: [userSearchCoordinator, searchCoordinator])
 

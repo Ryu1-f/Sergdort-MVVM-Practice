@@ -48,6 +48,7 @@ extension SearchViewModel {
 
         let filterdText = input.searchText
             .debounce(.milliseconds(300), scheduler: dependency.scheduler)
+            .distinctUntilChanged()
             .share(replay: 1)
 
         let sequence = filterdText
