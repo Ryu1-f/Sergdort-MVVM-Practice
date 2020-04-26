@@ -16,6 +16,7 @@ targets:
       - carthage: RxCocoa
       - carthage: RxRelay
       - carthage: APIKit
+      - carthage: SkeletonView
 
   Sergdort-MVVM-PracticeTests:
     type: bundle.unit-test

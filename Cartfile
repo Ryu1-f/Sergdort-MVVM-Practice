@@ -4,6 +4,9 @@ github "ReactiveX/RxSwift" ~> 5.0
 ## APIKit
 github "ishkawa/APIKit" ~> 5.0
 
+## UI
+github "Juanpe/SkeletonView" ~> 1.8.2               # https://github.com/Juanpe/SkeletonView/releases
+
 ## Test
 github "Quick/Quick"
 github "Quick/Nimble"

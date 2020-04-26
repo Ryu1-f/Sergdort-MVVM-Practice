@@ -6,9 +6,7 @@
 //
 
 import UIKit
-import Foundation
-import RxSwift
-import RxCocoa
+import SkeletonView
 
 class SampleViewController: UIViewController {
 
@@ -17,6 +15,7 @@ class SampleViewController: UIViewController {
             imageView.image = UIImage(named: "disney")?.rounded(to: 40)
         }
     }
+
     override func viewDidLoad() {
         super.viewDidLoad()
     }
