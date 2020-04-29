@@ -1,5 +1,6 @@
 ## Reactive
 github "ReactiveX/RxSwift" ~> 5.0
+github "RxSwiftCommunity/RxDataSources" ~> 4.0
 
 ## APIKit
 github "ishkawa/APIKit" ~> 5.0

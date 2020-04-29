@@ -47,7 +47,7 @@ extension UserSearchViewModel {
 
     func transform(input: Input) -> Output {
         let _users = PublishRelay<Users>()
-        let _usersItem = BehaviorRelay<[Users.Item]>(value: [])
+        let _usersItem = PublishRelay<[Users.Item]>()
         let _reloadData = PublishRelay<Void>()
         let _searchDescription = PublishRelay<String>()
         let _isLoading = BehaviorRelay<Bool>(value: false)
@@ -97,8 +97,10 @@ extension UserSearchViewModel {
             .disposed(by: disposeBag)
 
         input.itemSelected
-//            .filter { _ in !_isLoading.value }
-            .map { _usersItem.value[$0.row] }
+            .withLatestFrom(_usersItem) { indexPath, usersItem in
+                (indexPath, usersItem)
+            }
+            .map { $0.1[$0.0.row] }
             .bind(to: _selectedItem)
             .disposed(by: disposeBag)
 

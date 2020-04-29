@@ -13,7 +13,14 @@ import SkeletonView
 final class UserSearchViewController: UIViewController {
 
     @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var tableView: UITableView!
+
+    @IBOutlet weak var tableView: UITableView! {
+        didSet {
+            tableView.rowHeight = UITableView.automaticDimension
+            tableView.estimatedRowHeight = 83
+            tableView.register(UINib(nibName: UserTableViewCell.Const.identifier, bundle: nil), forCellReuseIdentifier: UserTableViewCell.Const.identifier)
+        }
+    }
 
     private let disposeBag: DisposeBag = .init()
     private let viewModel: UserSearchViewModel = .init()
@@ -25,7 +32,6 @@ final class UserSearchViewController: UIViewController {
         super.viewDidLoad()
         title = "Github Search"
         tableView.dataSource = self
-        setupViews()
         bind()
 
         let input = UserSearchViewModel.Input(
@@ -59,8 +65,6 @@ final class UserSearchViewController: UIViewController {
             .disposed(by: disposeBag)
 
 //        output.usersItem
-////            .skip(1)
-////            .filter { !$0.isEmpty }
 //            .bind(to: tableView.rx.items) { [weak self] _, _, element in
 //                let cell: UserTableViewCell = self?.tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.Const.identifier)! as! UserTableViewCell
 //                cell.userNameLabel.text = element.login
@@ -110,12 +114,6 @@ final class UserSearchViewController: UIViewController {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    private func setupViews() {
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.estimatedRowHeight = 83
-        tableView.register(UINib(nibName: UserTableViewCell.Const.identifier, bundle: nil), forCellReuseIdentifier: UserTableViewCell.Const.identifier)
     }
 
     private func bind() {
