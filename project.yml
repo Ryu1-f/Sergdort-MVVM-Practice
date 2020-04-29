@@ -17,6 +17,8 @@ targets:
       - carthage: RxRelay
       - carthage: APIKit
       - carthage: SkeletonView
+      - carthage: RxDataSources
+      - carthage: Differentiator
 
   Sergdort-MVVM-PracticeTests:
     type: bundle.unit-test

@@ -6,13 +6,24 @@
 //
 
 import Foundation
+import RxDataSources
 
 public struct Users: Codable {
     let total_count: Int
-    let items: [Item]
+    public var items: [Item]
+//    typealias Item = UserItem
 
-    struct Item: Codable {
+    public struct UserItem: Codable {
         let login: String
         let avatar_url: String
     }
+}
+
+extension Users: SectionModelType {
+    public typealias Item = UserItem
+
+    public init(original: Users, items: [Item]) {
+        self = original
+        self.items = items
+  }
 }

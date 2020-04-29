@@ -9,6 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SkeletonView
+//import RxDataSources
 
 final class UserSearchViewController: UIViewController {
 
@@ -19,12 +20,22 @@ final class UserSearchViewController: UIViewController {
             tableView.rowHeight = UITableView.automaticDimension
             tableView.estimatedRowHeight = 83
             tableView.register(UINib(nibName: UserTableViewCell.Const.identifier, bundle: nil), forCellReuseIdentifier: UserTableViewCell.Const.identifier)
+//            tableView.dataSource = dataSource
+            tableView.separatorStyle = .none
         }
     }
 
     private let disposeBag: DisposeBag = .init()
     private let viewModel: UserSearchViewModel = .init()
-    private var usersItem: BehaviorRelay<[Users.Item]> = .init(value: [])
+    private var usersItem: BehaviorRelay<[Users.UserItem]> = .init(value: [])
+
+//    let dataSource = RxTableViewSectionedReloadDataSource<Users>(
+//      configureCell: { dataSource, tableView, indexPath, item in
+//        let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.Const.identifier, for: indexPath) as! UserTableViewCell
+//        cell.userNameLabel.text = item.login
+//        cell.hideSkeletonAnimation()
+//        return cell
+//    })
 
     weak var delegate: UserSearchViewControllerDelegate?
 
@@ -64,14 +75,9 @@ final class UserSearchViewController: UIViewController {
             })
             .disposed(by: disposeBag)
 
-//        output.usersItem
-//            .bind(to: tableView.rx.items) { [weak self] _, _, element in
-//                let cell: UserTableViewCell = self?.tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.Const.identifier)! as! UserTableViewCell
-//                cell.userNameLabel.text = element.login
-//                cell.urlLabel.text = element.avatar_url
-//                return cell
-//        }
-//        .disposed(by: disposeBag)
+//        output.users
+//            .bind(to: tableView.rx.items(dataSource: dataSource))
+//            .disposed(by: disposeBag)
 
         output.error
             .subscribe(onNext: { error in

@@ -38,20 +38,22 @@ extension UserSearchViewModel {
 
     struct Output {
         let searchDescription: Observable<String>
-        let usersItem: Observable<[Users.Item]>
+        let usersItem: Observable<[Users.UserItem]>
         let reloadData: Observable<Void>
         let error: Observable<Error>
         let isLoading: Observable<Bool>
-        let selectedItem: Observable<Users.Item>
+        let selectedItem: Observable<Users.UserItem>
+        let users: Observable<[Users]>
     }
 
     func transform(input: Input) -> Output {
         let _users = PublishRelay<Users>()
-        let _usersItem = PublishRelay<[Users.Item]>()
+        let _usersArray = PublishRelay<[Users]>()
+        let _usersItem = PublishRelay<[Users.UserItem]>()
         let _reloadData = PublishRelay<Void>()
         let _searchDescription = PublishRelay<String>()
         let _isLoading = BehaviorRelay<Bool>(value: false)
-        let _selectedItem = PublishRelay<Users.Item>()
+        let _selectedItem = PublishRelay<Users.UserItem>()
 
         let filterdText = input.searchText
             .debounce(.milliseconds(300), scheduler: dependency.scheduler)
@@ -104,12 +106,18 @@ extension UserSearchViewModel {
             .bind(to: _selectedItem)
             .disposed(by: disposeBag)
 
+        _users
+            .map { [$0] }
+            .bind(to: _usersArray)
+            .disposed(by: disposeBag)
+
         return Output(searchDescription: _searchDescription.asObservable(),
                       usersItem: _usersItem.asObservable(),
                       reloadData: _reloadData.asObservable(),
                       error: sequence.errors(),
                       isLoading: _isLoading.asObservable(),
-                      selectedItem: _selectedItem.asObservable()
+                      selectedItem: _selectedItem.asObservable(),
+                      users: _usersArray.asObservable()
         )
     }
 }
