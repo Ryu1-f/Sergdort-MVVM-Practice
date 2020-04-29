@@ -20,29 +20,22 @@ final class UserSearchViewController: UIViewController {
             tableView.rowHeight = UITableView.automaticDimension
             tableView.estimatedRowHeight = 83
             tableView.register(UINib(nibName: UserTableViewCell.Const.identifier, bundle: nil), forCellReuseIdentifier: UserTableViewCell.Const.identifier)
-//            tableView.dataSource = dataSource
             tableView.separatorStyle = .none
+            tableView.delegate = dataSource
+            tableView.isScrollEnabled = false
+            tableView.isUserInteractionEnabled = false
         }
     }
 
     private let disposeBag: DisposeBag = .init()
     private let viewModel: UserSearchViewModel = .init()
-    private var usersItem: BehaviorRelay<[Users.UserItem]> = .init(value: [])
-
-//    let dataSource = RxTableViewSectionedReloadDataSource<Users>(
-//      configureCell: { dataSource, tableView, indexPath, item in
-//        let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.Const.identifier, for: indexPath) as! UserTableViewCell
-//        cell.userNameLabel.text = item.login
-//        cell.hideSkeletonAnimation()
-//        return cell
-//    })
+    private let dataSource: UserSearchDatasource = .init()
 
     weak var delegate: UserSearchViewControllerDelegate?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Github Search"
-        tableView.dataSource = self
         bind()
 
         let input = UserSearchViewModel.Input(
@@ -57,17 +50,6 @@ final class UserSearchViewController: UIViewController {
             .bind(to: navigationItem.rx.title)
             .disposed(by: disposeBag)
 
-        output.reloadData
-            .bind(to: Binder(tableView) { [weak self] tableView, _ in
-                self?.tableView.reloadData()
-            })
-            .disposed(by: disposeBag)
-
-        output.usersItem
-            .filter { !$0.isEmpty }
-            .bind(to: usersItem)
-            .disposed(by: disposeBag)
-
         output.isLoading
             .subscribe({ [weak self] in
                 guard let self = self else { return }
@@ -75,9 +57,13 @@ final class UserSearchViewController: UIViewController {
             })
             .disposed(by: disposeBag)
 
-//        output.users
-//            .bind(to: tableView.rx.items(dataSource: dataSource))
-//            .disposed(by: disposeBag)
+        output.usersItem
+            .bind(to: dataSource.items)
+            .disposed(by: disposeBag)
+
+        output.usersItem
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
 
         output.error
             .subscribe(onNext: { error in
@@ -95,17 +81,13 @@ final class UserSearchViewController: UIViewController {
             }
             .disposed(by: disposeBag)
 
-        Observable
-            .combineLatest(output.isLoading, output.usersItem) {
-                !($0 || $1.isEmpty)
-            }
+        output.usersItem
+            .map { !$0.isEmpty }
             .bind(to: tableView.rx.isScrollEnabled)
             .disposed(by: disposeBag)
 
-        Observable
-            .combineLatest(output.isLoading, output.usersItem) {
-                !($0 || $1.isEmpty)
-            }
+        output.usersItem
+            .map { !$0.isEmpty }
             .bind(to: tableView.rx.isUserInteractionEnabled)
             .disposed(by: disposeBag)
     }
@@ -134,25 +116,4 @@ final class UserSearchViewController: UIViewController {
 
 protocol UserSearchViewControllerDelegate: AnyObject {
     func pushUserDetail(with title: String)
-}
-
-extension UserSearchViewController: SkeletonTableViewDataSource {
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        usersItem.value.isEmpty ? 8: usersItem.value.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: UserTableViewCell.Const.identifier)! as! UserTableViewCell
-        if !usersItem.value.isEmpty {
-            cell.hideSkeletonAnimation()
-            cell.userNameLabel.text = usersItem.value[indexPath.row].login
-            cell.urlLabel.text = usersItem.value[indexPath.row].avatar_url
-        }
-        return cell
-    }
-
-    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        UserTableViewCell.Const.identifier
-    }
 }
